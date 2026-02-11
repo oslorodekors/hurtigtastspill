@@ -4,6 +4,7 @@ import { VisualFeedback } from '@/app/components/VisualFeedback';
 import { ScoreBoard } from '@/app/components/ScoreBoard';
 import { GameOverScreen } from '@/app/components/GameOverScreen';
 import { ModeSelector } from '@/app/components/ModeSelector';
+import { LevelUpNotification } from '@/app/components/LevelUpNotification';
 import { PixelCloud, PixelGrass, PixelTree, PixelFlower } from '@/app/components/PixelArt';
 import { Button } from '@/app/components/ui/button';
 import { Card } from '@/app/components/ui/card';
@@ -31,6 +32,8 @@ const shortcuts: Shortcut[] = [
   { id: '3', pcKeys: ['Control', 'x'], macKeys: ['Meta', 'x'], description: 'Klipp ut', pcAction: 'Ctrl+X', macAction: '⌘+X', visualization: 'cut', difficulty: 1 },
   { id: '4', pcKeys: ['Control', 'z'], macKeys: ['Meta', 'z'], description: 'Angre', pcAction: 'Ctrl+Z', macAction: '⌘+Z', visualization: 'undo', difficulty: 1 },
   { id: '6', pcKeys: ['Control', 's'], macKeys: ['Meta', 's'], description: 'Lagre', pcAction: 'Ctrl+S', macAction: '⌘+S', visualization: 'save', difficulty: 1 },
+  { id: '24', pcKeys: ['Control', 'o'], macKeys: ['Meta', 'o'], description: 'Åpne fil', pcAction: 'Ctrl+O', macAction: '⌘+O', visualization: 'new', difficulty: 1 },
+  { id: '25', pcKeys: ['Control', 'b'], macKeys: ['Meta', 'b'], description: 'Fet skrift', pcAction: 'Ctrl+B', macAction: '⌘+B', visualization: 'copy', difficulty: 1 },
   
   // Level 2 - Vanlige
   { id: '7', pcKeys: ['Control', 'f'], macKeys: ['Meta', 'f'], description: 'Søk/Finn', pcAction: 'Ctrl+F', macAction: '⌘+F', visualization: 'search', difficulty: 2 },
@@ -38,6 +41,9 @@ const shortcuts: Shortcut[] = [
   { id: '9', pcKeys: ['Control', 'n'], macKeys: ['Meta', 'n'], description: 'Ny (dokument/fane)', pcAction: 'Ctrl+N', macAction: '⌘+N', visualization: 'new', difficulty: 2 },
   { id: '10', pcKeys: ['Control', 'p'], macKeys: ['Meta', 'p'], description: 'Skriv ut', pcAction: 'Ctrl+P', macAction: '⌘+P', visualization: 'print', difficulty: 2 },
   { id: '12', pcKeys: ['Control', 't'], macKeys: ['Meta', 't'], description: 'Ny fane', pcAction: 'Ctrl+T', macAction: '⌘+T', visualization: 'newTab', difficulty: 2 },
+  { id: '26', pcKeys: ['Control', 'i'], macKeys: ['Meta', 'i'], description: 'Kursiv skrift', pcAction: 'Ctrl+I', macAction: '⌘+I', visualization: 'copy', difficulty: 2 },
+  { id: '27', pcKeys: ['Control', 'u'], macKeys: ['Meta', 'u'], description: 'Understreking', pcAction: 'Ctrl+U', macAction: '⌘+U', visualization: 'copy', difficulty: 2 },
+  { id: '28', pcKeys: ['Control', 'h'], macKeys: ['Meta', 'h'], description: 'Erstatt tekst', pcAction: 'Ctrl+H', macAction: '⌘+H', visualization: 'search', difficulty: 2 },
   
   // Level 3 - Middels
   { id: '5', pcKeys: ['Control', 'y'], macKeys: ['Meta', 'Shift', 'z'], description: 'Gjør om', pcAction: 'Ctrl+Y', macAction: '⌘+Shift+Z', visualization: 'redo', difficulty: 3 },
@@ -46,6 +52,9 @@ const shortcuts: Shortcut[] = [
   { id: '17', pcKeys: ['F5'], macKeys: ['Meta', 'r'], description: 'Oppdater side', pcAction: 'F5', macAction: '⌘+R', visualization: 'refresh', difficulty: 3 },
   { id: '18', pcKeys: ['Control', 'd'], macKeys: ['Meta', 'd'], description: 'Bokmerke side', pcAction: 'Ctrl+D', macAction: '⌘+D', visualization: 'bookmark', difficulty: 3 },
   { id: '20', pcKeys: ['Alt', 'Tab'], macKeys: ['Meta', 'Tab'], description: 'Bytt mellom vinduer', pcAction: 'Alt+Tab', macAction: '⌘+Tab', visualization: 'switchWindow', difficulty: 3 },
+  { id: '29', pcKeys: ['Control', 'k'], macKeys: ['Meta', 'k'], description: 'Sett inn lenke', pcAction: 'Ctrl+K', macAction: '⌘+K', visualization: 'copy', difficulty: 3 },
+  { id: '30', pcKeys: ['Control', 'e'], macKeys: ['Meta', 'e'], description: 'Søk med valgt tekst', pcAction: 'Ctrl+E', macAction: '⌘+E', visualization: 'search', difficulty: 3 },
+  { id: '31', pcKeys: ['Alt', 'F4'], macKeys: ['Meta', 'w'], description: 'Lukk vindu', pcAction: 'Alt+F4', macAction: '⌘+W', visualization: 'closeTab', difficulty: 3 },
   
   // Level 4 - Avansert
   { id: '13', pcKeys: ['Control', 'Shift', 't'], macKeys: ['Meta', 'Shift', 't'], description: 'Gjenåpne lukket fane', pcAction: 'Ctrl+Shift+T', macAction: '⌘+Shift+T', visualization: 'reopenTab', difficulty: 4 },
@@ -53,10 +62,21 @@ const shortcuts: Shortcut[] = [
   { id: '15', pcKeys: ['Control', 'Shift', 'Tab'], macKeys: ['Control', 'Shift', 'Tab'], description: 'Forrige fane', pcAction: 'Ctrl+Shift+Tab', macAction: '⌃+Shift+Tab', visualization: 'prevTab', difficulty: 4 },
   { id: '19', pcKeys: ['Control', 'l'], macKeys: ['Meta', 'l'], description: 'Gå til adressefelt', pcAction: 'Ctrl+L', macAction: '⌘+L', visualization: 'addressBar', difficulty: 4 },
   { id: '23', pcKeys: ['Control', 'Backspace'], macKeys: ['Alt', 'Backspace'], description: 'Slett ord', pcAction: 'Ctrl+Backspace', macAction: 'Alt+Backspace', visualization: 'deleteWord', difficulty: 4 },
+  { id: '32', pcKeys: ['Control', 'Shift', 'n'], macKeys: ['Meta', 'Shift', 'n'], description: 'Inkognitomodus', pcAction: 'Ctrl+Shift+N', macAction: '⌘+Shift+N', visualization: 'newTab', difficulty: 4 },
+  { id: '33', pcKeys: ['Control', 'Shift', 'Delete'], macKeys: ['Meta', 'Shift', 'Delete'], description: 'Slett nettleserdata', pcAction: 'Ctrl+Shift+Del', macAction: '⌘+Shift+Del', visualization: 'closeTab', difficulty: 4 },
+  { id: '34', pcKeys: ['Control', 'Shift', 'b'], macKeys: ['Meta', 'Shift', 'b'], description: 'Vis bokmerkerad', pcAction: 'Ctrl+Shift+B', macAction: '⌘+Shift+B', visualization: 'bookmark', difficulty: 4 },
+  { id: '35', pcKeys: ['Control', 'j'], macKeys: ['Meta', 'j'], description: 'Nedlastinger', pcAction: 'Ctrl+J', macAction: '⌘+J', visualization: 'new', difficulty: 4 },
+  { id: '36', pcKeys: ['Control', 'Shift', 'a'], macKeys: ['Meta', 'Shift', 'a'], description: 'Fjern alle markeringer', pcAction: 'Ctrl+Shift+A', macAction: '⌘+Shift+A', visualization: 'selectAll', difficulty: 4 },
   
   // Level 5 - Ekspert
   { id: '21', pcKeys: ['Alt', 'F4'], macKeys: ['Meta', 'q'], description: 'Avslutt program', pcAction: 'Alt+F4', macAction: '⌘+Q', visualization: 'quit', difficulty: 5 },
   { id: '22', pcKeys: ['F2'], macKeys: ['Enter'], description: 'Gi nytt navn til fil', pcAction: 'F2', macAction: 'Enter', visualization: 'rename', difficulty: 5 },
+  { id: '37', pcKeys: ['Control', 'Shift', 'Escape'], macKeys: ['Meta', 'Alt', 'Escape'], description: 'Oppgavebehandling', pcAction: 'Ctrl+Shift+Esc', macAction: '⌘+⌥+Esc', visualization: 'taskManager', difficulty: 5 },
+  { id: '38', pcKeys: ['Control', 'Alt', 'Tab'], macKeys: ['Meta', 'Tab'], description: 'Bla mellom åpne apper', pcAction: 'Ctrl+Alt+Tab', macAction: '⌘+Tab', visualization: 'switchWindow', difficulty: 5 },
+  { id: '39', pcKeys: ['Control', 'Shift', 's'], macKeys: ['Meta', 'Shift', 's'], description: 'Lagre som', pcAction: 'Ctrl+Shift+S', macAction: '⌘+Shift+S', visualization: 'save', difficulty: 5 },
+  { id: '40', pcKeys: ['Control', '0'], macKeys: ['Meta', '0'], description: 'Nullstill zoom', pcAction: 'Ctrl+0', macAction: '⌘+0', visualization: 'refresh', difficulty: 5 },
+  { id: '41', pcKeys: ['Control', '+'], macKeys: ['Meta', '+'], description: 'Zoom inn', pcAction: 'Ctrl++', macAction: '⌘++', visualization: 'copy', difficulty: 5 },
+  { id: '42', pcKeys: ['Control', '-'], macKeys: ['Meta', '-'], description: 'Zoom ut', pcAction: 'Ctrl+-', macAction: '⌘+-', visualization: 'copy', difficulty: 5 },
 ];
 
 // Beregn tid basert på nivå
@@ -97,6 +117,7 @@ export function ShortcutGame() {
   const [usedShortcuts, setUsedShortcuts] = useState<Set<string>>(new Set());
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [timerActive, setTimerActive] = useState(false);
+  const [showLevelUp, setShowLevelUp] = useState(false);
 
   const getRandomShortcut = useCallback(() => {
     const availableShortcuts = getAvailableShortcuts(level);
@@ -199,6 +220,10 @@ export function ShortcutGame() {
       if ((correctAnswers + 1) % 3 === 0) {
         setLevel(prev => prev + 1);
         setUsedShortcuts(new Set()); // Reset når vi går til nytt nivå
+        setShowLevelUp(true);
+        setTimeout(() => {
+          setShowLevelUp(false);
+        }, 2000);
       }
 
       setTimeout(() => {
@@ -479,6 +504,10 @@ export function ShortcutGame() {
               ⏰ TIDEN LØP UT! RIKTIG: <strong className="text-[#FFD700]">{platform === 'pc' ? currentShortcut?.pcAction : currentShortcut?.macAction}</strong>
             </p>
           </div>
+        )}
+
+        {showLevelUp && (
+          <LevelUpNotification level={level} timeLimit={getTimeForLevel(level)} />
         )}
       </div>
     </div>

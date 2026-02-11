@@ -1,4 +1,4 @@
-import { ShortcutGame } from '@/app/components/ShortcutGame';
+import { ShortcutGame } from "@/app/components/ShortcutGame";
 
 export default function App() {
   return (
